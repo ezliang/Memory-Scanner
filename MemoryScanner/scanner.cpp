@@ -1,11 +1,13 @@
 #include <Windows.h>
 #include <Psapi.h>
 #include <TlHelp32.h>
+#include <winnt.h>
 #include <stdlib.h>	
 #include <stdio.h>
 #include "error.h"
 
 unsigned long GetBaseAddress(HANDLE proc);
+DWORD GetModSize(HMODULE mod_base);
 
 int main(int argc, char** argv){
 
@@ -14,22 +16,30 @@ int main(int argc, char** argv){
 		return 0;
 	} 
 
-	DWORD pid = strtol(argv[1], NULL, 10);
-	HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 	unsigned long addr = 0;
+	DWORD pid = strtol(argv[1], NULL, 10);
+	DWORD mod_size = 0;
 	MEMORY_BASIC_INFORMATION mbi;
-
+	HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	
 	if (!proc) {
 		fprintf(stderr,"Failed to open process\n");
 		return 0;
 	}
-	printf("Loaded at %p\n", GetBaseAddress(proc));
-	while (VirtualQueryEx(proc, (void*)addr, &mbi, sizeof(MEMORY_BASIC_INFORMATION))) {
+
+	addr = GetBaseAddress(proc);
+
+	mod_size = GetModSize((HMODULE)addr);
+	
+
+	printf("Loaded at %p\n", addr);
+
+	VirtualQueryEx(proc, (void*)addr, &mbi, sizeof(MEMORY_BASIC_INFORMATION));
 		
-		//printf("Base Address: 0x%p\nAllocation Base: %p AllocationProtect: %d\nRegion Size: %u\nState: %d\nProtect: %d\nType: %d\n\n", mbi.BaseAddress, mbi.AllocationBase, mbi.AllocationProtect, mbi.RegionSize, mbi.State, mbi.Protect, mbi.Type);
+		printf("Base Address: 0x%p\nAllocation Base: %p AllocationProtect: %d\nRegion Size: %u\nState: %d\nProtect: %d\nType: %d\n\n", mbi.BaseAddress, mbi.AllocationBase, mbi.AllocationProtect, mbi.RegionSize, mbi.State, mbi.Protect, mbi.Type);
 		addr += mbi.RegionSize;
 	
-	}
+	
 
 	CloseHandle(proc);
 }
@@ -64,4 +74,9 @@ unsigned long GetBaseAddress(HANDLE proc){
 
 	
 	return NULL;
+}
+
+DWORD GetModSize(HMODULE mod_base){
+	
+
 }
