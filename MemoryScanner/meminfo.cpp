@@ -80,10 +80,12 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
         for (unsigned char* cp = (unsigned char*)cur->mem_block; cp < region_end; cp++) {
         
             if (!memcmp(cp, val, len)){
-                block_loc = std::make_pair((unsigned long)cur->region_start, 
+                //Decided to save a pointer to the mem_block copy since it won't be freed 
+                //until destructor is called or the val at the location isn't needed
+                block_loc = std::make_pair((unsigned long)cur->mem_block, 
                         (unsigned long)((DWORD_PTR)cp - (DWORD_PTR)cur->mem_block));
                 scan_locs.push_back(block_loc);
-                printf("%p %u\n", scan_locs.back().first, scan_locs.back().second);
+                printf("%p 0x%x\n", scan_locs.back().first, scan_locs.back().second);
             }
         }
     
