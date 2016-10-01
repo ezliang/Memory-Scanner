@@ -8,7 +8,7 @@
 #include "error.h"
 #include "meminfo.h"
 #include "modinfo.h"
-bool ScanMemory(HANDLE proc, unsigned long start, unsigned long stop, void* val, unsigned int len);
+bool ScanMemory(MemoryBlockList mbl, unsigned long start, unsigned long stop, void* val, unsigned int len);
 int main(int argc, char** argv){
 
 	if (argc < 2){
@@ -44,20 +44,21 @@ int main(int argc, char** argv){
 
 	unsigned int val = 0xdeadbeef;
 
-	ScanMemory(proc, addr, mod_end, &val, sizeof(val));
+	MemoryBlockList mbl(proc);
+
+	ScanMemory(mbl, addr, mod_end, &val, sizeof(val));
 
 	CloseHandle(proc);
 }
 
 
-bool ScanMemory(HANDLE proc, unsigned long start, unsigned long stop, void* val, unsigned int len){
+bool ScanMemory(MemoryBlockList mbl, unsigned long start, unsigned long stop, void* val, unsigned int len){
 	MEMORY_BASIC_INFORMATION mbi;
 
 	for (unsigned long i = (unsigned long) start; i < (unsigned long) stop;){
-		if (!VirtualQueryEx(proc, (void*)i, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
+		if (!VirtualQueryEx(mbl.get_proc(), (void*)i, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
 			return false;
-
-		printf("addr %p, baseaddr %p\n", i, mbi.AllocationBase);
+		mbl.AddNode(mbi);
 		i += mbi.RegionSize;
 	}
 	return true;
