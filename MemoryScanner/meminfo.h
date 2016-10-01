@@ -21,7 +21,6 @@ public:
 	HANDLE get_proc() const { return proc; }
 	void PrintMemInfo() const;
 private:
-    bool _check_bytes(unsigned char* buff1, unsigned char* buff2, size_t len) const;
     HANDLE proc;
     MemoryBlockInfo* head;
     MemoryBlockInfo* last;
