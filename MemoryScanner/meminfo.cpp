@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "meminfo.h"
+#include <utility>
 
 MemoryBlockList::~MemoryBlockList() {
 
@@ -49,7 +50,7 @@ void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
 }
 
 void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
-                                 unsigned char* val, unsigned int len) {
+                                     unsigned char* val, unsigned int len) {
 	MEMORY_BASIC_INFORMATION mbi;
 
     scan_val = new unsigned char[len];
@@ -59,11 +60,34 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
 	for (unsigned long query_addr = (unsigned long)start; query_addr < (unsigned long)stop;){
 		if (!VirtualQueryEx(proc, (void*)query_addr, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
 			break;
-		this->AddNode(mbi);
+        if (mbi.State & MEM_COMMIT &&
+            mbi.Protect & (PAGE_EXECUTE_READWRITE |
+                           PAGE_READWRITE | 
+                           PAGE_EXECUTE_WRITECOPY) &&
+            (mbi.Protect & PAGE_GUARD) != PAGE_GUARD)
+		    this->AddNode(mbi);
 		query_addr += mbi.RegionSize;
 	}
 
-
+    MemoryBlockInfo* cur;
+    unsigned char* region_end;
+    cur = head;
+   
+    while (cur) {
+        region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
+        
+        for (unsigned char* cp = (unsigned char*)cur->mem_block; cp < region_end; cp++) {
+        
+            if (!memcmp(cp, val, len)){
+                std::pair <unsigned long, unsigned long> pair1 = std::make_pair((unsigned long)cur->region_start, (unsigned long)((DWORD_PTR)cp - (DWORD_PTR)cur->mem_block));
+                scan_locs.push_back(pair1);
+                printf("%p %u\n", scan_locs.back().first, scan_locs.back().second);
+            }
+        }
+    
+    
+        cur = cur->next;
+    }
 
 }
 
@@ -77,3 +101,9 @@ void MemoryBlockList::PrintMemInfo() const {
 	}
 }
 
+bool MemoryBlockList::_check_bytes(unsigned char* buff1, unsigned char* buff2, size_t len) const {
+
+    
+
+
+}

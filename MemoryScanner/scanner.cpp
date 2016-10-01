@@ -42,11 +42,10 @@ int main(int argc, char** argv){
 
 	printf("Loaded at %p\n", addr);
 
-	unsigned int val = 0xdeadbeef;
+	unsigned char val = 0x41;
 
 	MemoryBlockList mbl(proc);
 
-	mbl.ScanMemory(addr, mod_end, (unsigned char*)&val, sizeof(val));
-	mbl.PrintMemInfo();
+	mbl.InitScanMemory(addr, mod_end, (unsigned char*)&val, sizeof(val));
 	CloseHandle(proc);
 }
