@@ -72,15 +72,17 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
     MemoryBlockInfo* cur;
     unsigned char* region_end;
     cur = head;
-   
+    std::pair <unsigned long, unsigned long> block_loc;
+
     while (cur) {
         region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
         
         for (unsigned char* cp = (unsigned char*)cur->mem_block; cp < region_end; cp++) {
         
             if (!memcmp(cp, val, len)){
-                std::pair <unsigned long, unsigned long> pair1 = std::make_pair((unsigned long)cur->region_start, (unsigned long)((DWORD_PTR)cp - (DWORD_PTR)cur->mem_block));
-                scan_locs.push_back(pair1);
+                block_loc = std::make_pair((unsigned long)cur->region_start, 
+                        (unsigned long)((DWORD_PTR)cp - (DWORD_PTR)cur->mem_block));
+                scan_locs.push_back(block_loc);
                 printf("%p %u\n", scan_locs.back().first, scan_locs.back().second);
             }
         }
