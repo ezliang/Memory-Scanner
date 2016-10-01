@@ -45,29 +45,30 @@ void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
 		last = new_block;
 	}
 
-	return new_block;
+    return new_block;
 }
 
 void MemoryBlockList::ScanMemory(unsigned long start, unsigned long stop,
-				 unsigned char* val, unsigned int len) {
+                                 unsigned char* val, unsigned int len) {
 	MEMORY_BASIC_INFORMATION mbi;
 
-	for (unsigned long i = (unsigned long)start; i < (unsigned long)stop;){
-		if (!VirtualQueryEx(proc, (void*)i, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
+	for (unsigned long query_addr = (unsigned long)start; query_addr < (unsigned long)stop;){
+		if (!VirtualQueryEx(proc, (void*)query_addr, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
 			break;
 		this->AddNode(mbi);
-		i += mbi.RegionSize;
+		query_addr += mbi.RegionSize;
 	}
+
 
 }
 
 
 void MemoryBlockList::PrintMemInfo() const {
-	MemoryBlockInfo* cur = head;
+    MemoryBlockInfo* cur = head;
 
-	while (cur){
-		printf("Address:\t0x%p\nSize:\t\t0x%x\n",cur->region_start,cur->region_size);
-		cur = cur->next;
+    while (cur){
+        printf("Address:\t0x%p\nSize:\t\t0x%x\n",cur->region_start,cur->region_size);
+        cur = cur->next;
 	}
 }
 
