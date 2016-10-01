@@ -48,9 +48,13 @@ void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
     return new_block;
 }
 
-void MemoryBlockList::ScanMemory(unsigned long start, unsigned long stop,
+void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
                                  unsigned char* val, unsigned int len) {
 	MEMORY_BASIC_INFORMATION mbi;
+
+    scan_val = new unsigned char[len];
+    memcpy(scan_val, val, len);
+    scan_len = len;
 
 	for (unsigned long query_addr = (unsigned long)start; query_addr < (unsigned long)stop;){
 		if (!VirtualQueryEx(proc, (void*)query_addr, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
@@ -58,6 +62,7 @@ void MemoryBlockList::ScanMemory(unsigned long start, unsigned long stop,
 		this->AddNode(mbi);
 		query_addr += mbi.RegionSize;
 	}
+
 
 
 }

@@ -14,12 +14,15 @@ public:
 	~MemoryBlockList();
 
 	void* AddNode(const MEMORY_BASIC_INFORMATION mbi);
-	void ScanMemory(unsigned long start, unsigned long stop, 
+	void InitScanMemory(unsigned long start, unsigned long stop, 
 					 unsigned char* val, unsigned int len);
 	HANDLE get_proc() const { return proc; }
 	void PrintMemInfo() const;
 private:
-	HANDLE proc;
-	MemoryBlockInfo* head;
-	MemoryBlockInfo* last;
+    HANDLE proc;
+    MemoryBlockInfo* head;
+    MemoryBlockInfo* last;
+    unsigned int scan_len;
+    unsigned char* scan_val;
+   
 };
