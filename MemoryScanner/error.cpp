@@ -2,15 +2,15 @@
 #include <Windows.h>
 #include <stdio.h>
 
-void ExitProcess()
+void ExitShowError()
 {
 
 	DWORD errorMessageID = GetLastError();
 	if (errorMessageID == 0)
 		return;
 
-	wchar_t msg_buff[256];
-	FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, 
+	char msg_buff[256];
+	FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, 
 		NULL, 
 		GetLastError(),
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
@@ -19,6 +19,6 @@ void ExitProcess()
 		NULL
 		);
 
-	wprintf(L"%s\n", msg_buff);
+	printf("%s\n", msg_buff);
 	ExitProcess(EXIT_FAILURE);
 }

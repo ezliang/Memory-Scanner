@@ -1,1 +1,1 @@
-void ExitProcess();
+void ExitShowError();
