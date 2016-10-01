@@ -11,6 +11,8 @@ class MemoryBlockList{
 
 public:
 	MemoryBlockList(HANDLE proc) : head(nullptr), last(nullptr), proc(proc) {};
+	~MemoryBlockList();
+
 	void* AddNode(const MEMORY_BASIC_INFORMATION mbi);
 	HANDLE get_proc() const { return proc; }
 	void PrintMemInfo() const;

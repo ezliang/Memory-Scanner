@@ -8,7 +8,7 @@
 #include "error.h"
 #include "meminfo.h"
 #include "modinfo.h"
-bool ScanMemory(MemoryBlockList mbl, unsigned long start, unsigned long stop, void* val, unsigned int len);
+bool ScanMemory(MemoryBlockList& mbl, unsigned long start, unsigned long stop, void* val, unsigned int len);
 int main(int argc, char** argv){
 
 	if (argc < 2){
@@ -47,12 +47,12 @@ int main(int argc, char** argv){
 	MemoryBlockList mbl(proc);
 
 	ScanMemory(mbl, addr, mod_end, &val, sizeof(val));
-
+	mbl.PrintMemInfo();
 	CloseHandle(proc);
 }
 
 
-bool ScanMemory(MemoryBlockList mbl, unsigned long start, unsigned long stop, void* val, unsigned int len){
+bool ScanMemory(MemoryBlockList& mbl, unsigned long start, unsigned long stop, void* val, unsigned int len){
 	MEMORY_BASIC_INFORMATION mbi;
 
 	for (unsigned long i = (unsigned long) start; i < (unsigned long) stop;){

@@ -1,4 +1,19 @@
+#include <stdio.h>
 #include "meminfo.h"
+
+MemoryBlockList::~MemoryBlockList(){
+
+	MemoryBlockInfo* cur = head;
+	MemoryBlockInfo* next;
+
+	while (cur) {
+		next = cur->next;
+		delete cur->mem_block;
+		delete cur;
+		cur = next;
+	}
+
+}
 
 void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi){
 	MemoryBlockInfo* new_block;
@@ -23,9 +38,9 @@ void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi){
 	if (!head)
 		head = new_block;
 
-	if (!last){
+	if (!last) {
 		last = new_block;
-	} else{
+	} else {
 		last->next = new_block;
 		last = new_block;
 	}
@@ -36,5 +51,9 @@ void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi){
 void MemoryBlockList::PrintMemInfo() const {
 	MemoryBlockInfo* cur = head;
 
-
+	while (cur){
+		printf("Address:\t0x%p\nSize:\t\t0x%x\n",cur->region_start,cur->region_size);
+		cur = cur->next;
+	}
 }
+
