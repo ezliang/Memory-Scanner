@@ -42,7 +42,7 @@ int main(int argc, char** argv){
 
 	printf("Loaded at %p\n", addr);
 
-	unsigned char val = 0x41;
+	unsigned short val = 0xdeadbeef;
 
 	MemoryBlockList mbl(proc);
 

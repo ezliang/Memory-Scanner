@@ -2,6 +2,8 @@
 #include "meminfo.h"
 #include <utility>
 
+#define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
+
 MemoryBlockList::~MemoryBlockList() {
 
 	MemoryBlockInfo* cur = head;
@@ -62,34 +64,35 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
 			break;
         if (mbi.State & MEM_COMMIT &&
             mbi.Protect & (PAGE_EXECUTE_READWRITE |
-                           PAGE_READWRITE | 
-                           PAGE_EXECUTE_WRITECOPY) &&
-            (mbi.Protect & PAGE_GUARD) != PAGE_GUARD)
-		    this->AddNode(mbi);
+            PAGE_READWRITE |
+            PAGE_EXECUTE_WRITECOPY) &&
+            (mbi.Protect & PAGE_GUARD) != PAGE_GUARD) {
+            this->AddNode(mbi);
+        }
 		query_addr += mbi.RegionSize;
 	}
 
     MemoryBlockInfo* cur;
+    DWORD offset = 0;
     unsigned char* region_end;
-    cur = head;
     std::pair <unsigned long, unsigned long> block_loc;
+    cur = head;
 
     while (cur) {
         region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
         
-        for (unsigned char* cp = (unsigned char*)cur->mem_block; cp < region_end; cp++) {
-        
-            if (!memcmp(cp, val, len)){
+        for (DWORD offset = 0; offset < cur->region_size; offset++) {
+            
+            if (!memcmp(MakePtr(void*, cur->mem_block, offset), val, len)) {
+
                 //Decided to save a pointer to the mem_block copy since it won't be freed 
                 //until destructor is called or the val at the location isn't needed
                 block_loc = std::make_pair((unsigned long)cur->mem_block, 
-                        (unsigned long)((DWORD_PTR)cp - (DWORD_PTR)cur->mem_block));
+                            offset);
                 scan_locs.push_back(block_loc);
-                printf("%p 0x%x\n", scan_locs.back().first, scan_locs.back().second);
+                printf("Found: %p\n", MakePtr(void*, cur->region_start , offset));
             }
         }
-    
-    
         cur = cur->next;
     }
 
@@ -99,15 +102,8 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
 void MemoryBlockList::PrintMemInfo() const {
     MemoryBlockInfo* cur = head;
 
-    while (cur){
+    while (cur) {
         printf("Address:\t0x%p\nSize:\t\t0x%x\n",cur->region_start,cur->region_size);
         cur = cur->next;
 	}
-}
-
-bool MemoryBlockList::_check_bytes(unsigned char* buff1, unsigned char* buff2, size_t len) const {
-
-    
-
-
 }
