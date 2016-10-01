@@ -3,7 +3,7 @@
 struct MemoryBlockInfo{
 	void* region_start;
 	DWORD region_size;
-	DWORD prot;
+	
 
 	MemoryBlockInfo* next;
 };
@@ -12,7 +12,7 @@ class MemoryBlockList{
 
 public:
 	MemoryBlockList() : head(nullptr), last(nullptr), cur(nullptr) {};
-	void* AddNode();
+	void* AddNode(MEMORY_BASIC_INFORMATION mbi);
 
 private:
 	MemoryBlockInfo* head;
