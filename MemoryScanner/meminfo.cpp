@@ -32,3 +32,9 @@ void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi){
 
 	return new_block;
 }
+
+void MemoryBlockList::PrintMemInfo() const {
+	MemoryBlockInfo* cur = head;
+
+
+}
