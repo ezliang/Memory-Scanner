@@ -46,7 +46,7 @@ int main(int argc, char** argv){
 
 	MemoryBlockList mbl(proc);
 
-	ScanMemory(mbl, addr, mod_end, &val, sizeof(val));
+	mbl.ScanMemory(addr, mod_end, (unsigned char*)&val, sizeof(val));
 	mbl.PrintMemInfo();
 	CloseHandle(proc);
 }
