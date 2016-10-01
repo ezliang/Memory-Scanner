@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "meminfo.h"
 
-MemoryBlockList::~MemoryBlockList(){
+MemoryBlockList::~MemoryBlockList() {
 
 	MemoryBlockInfo* cur = head;
 	MemoryBlockInfo* next;
@@ -15,7 +15,7 @@ MemoryBlockList::~MemoryBlockList(){
 
 }
 
-void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi){
+void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
 	MemoryBlockInfo* new_block;
 
 	new_block = new MemoryBlockInfo();
@@ -47,6 +47,20 @@ void* MemoryBlockList::AddNode(const MEMORY_BASIC_INFORMATION mbi){
 
 	return new_block;
 }
+
+void MemoryBlockList::ScanMemory(unsigned long start, unsigned long stop,
+				 unsigned char* val, unsigned int len) {
+	MEMORY_BASIC_INFORMATION mbi;
+
+	for (unsigned long i = (unsigned long)start; i < (unsigned long)stop;){
+		if (!VirtualQueryEx(proc, (void*)i, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
+			break;
+		this->AddNode(mbi);
+		i += mbi.RegionSize;
+	}
+
+}
+
 
 void MemoryBlockList::PrintMemInfo() const {
 	MemoryBlockInfo* cur = head;

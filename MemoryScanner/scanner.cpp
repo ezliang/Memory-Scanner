@@ -8,7 +8,7 @@
 #include "error.h"
 #include "meminfo.h"
 #include "modinfo.h"
-bool ScanMemory(MemoryBlockList& mbl, unsigned long start, unsigned long stop, void* val, unsigned int len);
+
 int main(int argc, char** argv){
 
 	if (argc < 2){
@@ -49,17 +49,4 @@ int main(int argc, char** argv){
 	ScanMemory(mbl, addr, mod_end, &val, sizeof(val));
 	mbl.PrintMemInfo();
 	CloseHandle(proc);
-}
-
-
-bool ScanMemory(MemoryBlockList& mbl, unsigned long start, unsigned long stop, void* val, unsigned int len){
-	MEMORY_BASIC_INFORMATION mbi;
-
-	for (unsigned long i = (unsigned long) start; i < (unsigned long) stop;){
-		if (!VirtualQueryEx(mbl.get_proc(), (void*)i, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
-			return false;
-		mbl.AddNode(mbi);
-		i += mbi.RegionSize;
-	}
-	return true;
 }
