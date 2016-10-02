@@ -18,9 +18,11 @@ public:
 	void* AddNode(const MEMORY_BASIC_INFORMATION mbi);
 	void InitScanMemory(unsigned long start, unsigned long stop, 
                         unsigned char* val, unsigned int len);
+    void ScanMemoryCont();
 	HANDLE get_proc() const { return proc; }
 	void PrintMemInfo() const;
 private:
+    void _ReScanMemory();
     HANDLE proc;
     MemoryBlockInfo* head;
     MemoryBlockInfo* last;
@@ -29,3 +31,5 @@ private:
     std::vector<std::pair<unsigned long, unsigned long>> scan_locs;
    
 };
+
+void PrintMem(void* addr, size_t len, size_t block_len=4);

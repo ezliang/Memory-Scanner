@@ -24,7 +24,7 @@ int main(int argc, char** argv){
 	
 	if (!proc) {
 		fprintf(stderr,"Failed to open process\n");
-		return 0;
+        ExitShowError();
 	}
 
 	addr = GetBaseAddress(proc);
@@ -42,10 +42,11 @@ int main(int argc, char** argv){
 
 	printf("Loaded at %p\n", addr);
 
-	unsigned short val = 0xdeadbeef;
+	unsigned long val = 0xdeadbeef;
 
 	MemoryBlockList mbl(proc);
-
-	mbl.InitScanMemory(addr, mod_end, (unsigned char*)&val, sizeof(val));
+    PrintMem(&val, sizeof(val));
+	mbl.InitScanMemory(0, 0x7FFFFFFF, (unsigned char*)&val, sizeof(val));
+    mbl.ScanMemoryCont();
 	CloseHandle(proc);
 }
