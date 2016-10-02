@@ -6,8 +6,9 @@
 #include <stdio.h>
 #include <iostream>
 #include "error.h"
-#include "meminfo.h"
+#include "scanner.h"
 #include "modinfo.h"
+#include "menu.h"
 
 int main(int argc, char** argv){
 
@@ -37,20 +38,29 @@ int main(int argc, char** argv){
 	if (!mod_size)
 		ExitShowError();
 
-	printf("Mod size 0x%x\n", mod_size);
-	mod_end = addr + mod_size;
+    unsigned c = GetScan();
+   
+    while (c != 3) {
+       
+        switch (c) {
+        case 1:
+            ExactScan();
+            break;
+        case 2:
+            break;
+        default:
+            break;
+        }
+        c = GetScan();
+    }
 
-	printf("Loaded at %p\n", addr);
+	//printf("Mod size 0x%x\n", mod_size);
+	//mod_end = addr + mod_size;
 
-	unsigned long val = 0xdeadbeef;
+	//printf("Loaded at %p\n", addr);
 
-	Scanner s(proc);
-    PrintMem(&val, sizeof(val));
-	s.InitScanMemory(0, 0x7FFFFFFF, (unsigned char*)&val, sizeof(val));
-    char h;
-    std::cin >> h;
-    val = 0xcafebabe;
-    s.ScanMemoryCont((unsigned char*)&val);
-    s.EndScan();
+	//unsigned long val = 0xdeadbeef;
+	
 	CloseHandle(proc);
 }
+

@@ -1,0 +1,2 @@
+char GetScan();
+void ExactScan();
