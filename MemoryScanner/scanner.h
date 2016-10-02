@@ -21,6 +21,7 @@ public:
     void ScanMemoryCont(unsigned char* new_val);
     void EndScan();
 	void PrintMemInfo() const;
+    void PrintScanResults() const;
 private:
     void _ReScanMemory();
     HANDLE proc;

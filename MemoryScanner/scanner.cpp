@@ -173,6 +173,15 @@ void Scanner::_ReScanMemory(){
 
 }
 
+void Scanner::PrintScanResults() const{
+    MemoryBlockInfo* cur = head;
+
+    for (size_t i = 0; i < scan_locs.size(); ++i) {
+        printf("%p\n", MakePtr(void*, scan_locs[i].first, scan_locs[i].second));
+    }
+
+}
+
 void PrintMem(void* addr, size_t len, size_t block_len){
     void* tmp = (unsigned char*)addr;
     for (size_t i = 0; i < len; ) {
