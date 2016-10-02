@@ -101,14 +101,27 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
     //worrying about scan iterations
 }
 
-void MemoryBlockList::ScanMemoryCont(){
+void MemoryBlockList::ScanMemoryCont(unsigned char* new_val){
     MemoryBlockInfo* cur = head;
+    std::vector<std::pair<unsigned long, unsigned long>>::iterator it;
     _ReScanMemory();
 
-    for (size_t i = 0; i < scan_locs.size(); ++i) {
+
+    for (it = scan_locs.begin(); it != scan_locs.end() && cur; ++it) {
+        //since the locations are pushed in order of mem_blocks this should work
+        if ((unsigned long)cur->mem_block != it->first){
+            cur = cur->next;
+        } else {
+           
+            if (memcmp(MakePtr(void*, cur->mem_block, it->second),
+                &new_val, scan_len)){
+                scan_locs.erase(it);
+            }
         
-    
-    
+        }
+        
+
+
     
     }
 }

@@ -18,7 +18,7 @@ public:
 	void* AddNode(const MEMORY_BASIC_INFORMATION mbi);
 	void InitScanMemory(unsigned long start, unsigned long stop, 
                         unsigned char* val, unsigned int len);
-    void ScanMemoryCont();
+    void ScanMemoryCont(unsigned char* new_val);
 	HANDLE get_proc() const { return proc; }
 	void PrintMemInfo() const;
 private:
