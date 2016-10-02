@@ -104,25 +104,37 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
 void MemoryBlockList::ScanMemoryCont(unsigned char* new_val){
     MemoryBlockInfo* cur = head;
     std::vector<std::pair<unsigned long, unsigned long>>::iterator it;
+
     _ReScanMemory();
 
+    for (it = scan_locs.begin(); it != scan_locs.end(); ++it){
+        printf("Blocks %p %p %p %p\n", it->first, it->second,MakePtr(void*,it->first,it->second));
+    
+    }
 
-    for (it = scan_locs.begin(); it != scan_locs.end() && cur; ++it) {
+    for (it = scan_locs.begin(); it != scan_locs.end(); ) {
         //since the locations are pushed in order of mem_blocks this should work
         if ((unsigned long)cur->mem_block != it->first){
-            cur = cur->next;
-        } else {
-           
-            if (memcmp(MakePtr(void*, cur->mem_block, it->second),
-                &new_val, scan_len)){
-                scan_locs.erase(it);
+            while (cur && (unsigned long)cur->mem_block != it->first) {
+                printf("Skipping %p with it: %p loc is %p\n", cur->mem_block,it->first,cur->region_start);
+                cur = cur->next;
             }
-        
+        }
+
+        if (!cur) break;
+
+        int r = memcmp(MakePtr(void*, cur->mem_block, it->second),
+            new_val, scan_len);
+
+        //Keep only blocks that changed to the search value
+        if (memcmp(MakePtr(void*, cur->mem_block, it->second),
+            new_val, scan_len)){
+            it = scan_locs.erase(it);
+        } else {
+            //block has change value;
+            ++it;
         }
         
-
-
-    
     }
 }
 

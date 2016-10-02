@@ -47,6 +47,8 @@ int main(int argc, char** argv){
 	MemoryBlockList mbl(proc);
     PrintMem(&val, sizeof(val));
 	mbl.InitScanMemory(0, 0x7FFFFFFF, (unsigned char*)&val, sizeof(val));
+    char h;
+    std::cin >> h;
     val = 0xcafebabe;
     mbl.ScanMemoryCont((unsigned char*)&val);
 	CloseHandle(proc);
