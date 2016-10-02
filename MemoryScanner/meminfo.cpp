@@ -116,9 +116,6 @@ void MemoryBlockList::ScanMemoryCont(unsigned char* new_val){
 
         if (!cur) break;
 
-        int r = memcmp(MakePtr(void*, cur->mem_block, it->second),
-            new_val, scan_len);
-
         //Keep only blocks that changed to the search value
         if (memcmp(MakePtr(void*, cur->mem_block, it->second),
             new_val, scan_len)){
