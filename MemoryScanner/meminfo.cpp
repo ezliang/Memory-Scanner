@@ -91,7 +91,6 @@ void MemoryBlockList::InitScanMemory(unsigned long start, unsigned long stop,
                             (unsigned long)cur->mem_block, 
                             offset);
                 scan_locs.push_back(block_loc);
-                printf("Found: %p\n", MakePtr(void*, cur->region_start , offset));
             }
         }
         cur = cur->next;
@@ -107,16 +106,10 @@ void MemoryBlockList::ScanMemoryCont(unsigned char* new_val){
 
     _ReScanMemory();
 
-    for (it = scan_locs.begin(); it != scan_locs.end(); ++it){
-        printf("Blocks %p %p %p %p\n", it->first, it->second,MakePtr(void*,it->first,it->second));
-    
-    }
-
     for (it = scan_locs.begin(); it != scan_locs.end(); ) {
         //since the locations are pushed in order of mem_blocks this should work
         if ((unsigned long)cur->mem_block != it->first){
             while (cur && (unsigned long)cur->mem_block != it->first) {
-                printf("Skipping %p with it: %p loc is %p\n", cur->mem_block,it->first,cur->region_start);
                 cur = cur->next;
             }
         }
