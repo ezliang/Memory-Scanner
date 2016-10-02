@@ -38,20 +38,20 @@ int main(int argc, char** argv){
 	if (!mod_size)
 		ExitShowError();
 
-    unsigned c = GetScan();
+    int c = GetScanType();
    
     while (c != 3) {
        
         switch (c) {
         case 1:
-            ExactScan();
+            ScanMenu(proc);
             break;
         case 2:
             break;
         default:
             break;
         }
-        c = GetScan();
+        c = GetScanType();
     }
 
 	//printf("Mod size 0x%x\n", mod_size);
