@@ -87,7 +87,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
                 //Decided to save a pointer to the mem_block copy since it won't be freed 
                 //until destructor is called or the val at the location isn't needed
                 block_loc = std::make_pair(
-                            (unsigned long)cur->mem_block, 
+                            (unsigned long)cur->region_start, 
                             offset);
                 scan_locs.push_back(block_loc);
             }
@@ -108,7 +108,7 @@ void Scanner::ScanMemoryCont(unsigned char* new_val){
     for (it = scan_locs.begin(); it != scan_locs.end(); ) {
         //since the locations are pushed in order of mem_blocks this should work
         if ((unsigned long)cur->mem_block != it->first){
-            while (cur && (unsigned long)cur->mem_block != it->first) {
+            while (cur && (unsigned long)cur->region_start != it->first) {
                 cur = cur->next;
             }
         }
