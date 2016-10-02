@@ -48,6 +48,8 @@ void ScanMenu(HANDLE proc){
         c = ChangeScanOpt();
     }
 
+
+
     s.InitScanMemory(start, end, val, len);
 
 }
@@ -60,4 +62,10 @@ int ChangeScanOpt(){
 
     scanf_s(" %d", &c);
     return c;
+}
+
+void GetValueAndSize(unsigned char*& val_loc, size_t& val_len){
+
+
+
 }
