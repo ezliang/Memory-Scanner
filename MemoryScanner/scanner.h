@@ -28,7 +28,6 @@ private:
     MemoryBlockInfo* head;
     MemoryBlockInfo* last;
     unsigned int scan_len;
-    void* scan_val;
     std::vector<std::pair<unsigned long, unsigned long>> scan_locs;
    
 };

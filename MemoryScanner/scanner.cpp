@@ -15,7 +15,7 @@ Scanner::~Scanner() {
 		delete cur;
 		cur = next;
 	}
-    delete scan_val;
+  
 
 }
 
@@ -56,8 +56,6 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
                                      void* val, unsigned int len) {
 	MEMORY_BASIC_INFORMATION mbi;
 
-    scan_val = new unsigned char[len];
-    memcpy(scan_val, val, len);
     scan_len = len;
 
 	for (unsigned long query_addr = (unsigned long)start; query_addr < (unsigned long)stop;){
@@ -142,8 +140,6 @@ void Scanner::EndScan(){
 
     scan_locs.clear();
     scan_len = 0;
-    delete scan_val;
-    scan_val = nullptr;
     head = nullptr;
     last = nullptr;
 }
