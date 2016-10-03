@@ -98,10 +98,9 @@ void GetValueAndSize(void*& val_loc, size_t& val_len){
     radix = 10;
     c = input;
 
-    if (!strncmp(input, "0x", 2)){
-        radix = 8;
-        c = input + 2;
-    }
+    if (!strncmp(input, "0x", 2)) 
+        radix = 16;
+
     //can cause the str conversions to fail but that seems like a user error
     switch (choice) {
     case 1:
@@ -118,7 +117,7 @@ void GetValueAndSize(void*& val_loc, size_t& val_len){
         val_len = sizeof(unsigned long);
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned long*)val_loc = (unsigned long)strtoul(c, nullptr, radix);
-        printf("Value: %u\n", *(unsigned long*)val_loc);
+        //printf("Value: %u\n", *(unsigned long*)val_loc);
         break;
     case 4:
         val_len = sizeof(float);
