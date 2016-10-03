@@ -65,7 +65,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="error.cpp" />
-    <ClCompile Include="menucpp.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="scanner.cpp" />
     <ClCompile Include="modinfo.cpp" />
     <ClCompile Include="memscan.cpp" />

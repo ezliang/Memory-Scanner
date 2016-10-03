@@ -19,8 +19,8 @@ int main(int argc, char** argv){
 
 	unsigned long addr = 0;
 	unsigned long mod_end;
-	DWORD pid = strtol(argv[1], NULL, 10);
-	DWORD mod_size = 0;
+	unsigned long pid = strtol(argv[1], NULL, 10);
+	unsigned long mod_size = 0;
 	HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 	
 	if (!proc) {
