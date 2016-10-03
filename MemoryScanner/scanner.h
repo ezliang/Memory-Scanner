@@ -4,8 +4,8 @@
 
 struct MemoryBlockInfo{
 	void* region_start;
-	DWORD region_size;
-	BYTE* mem_block;
+	unsigned long region_size;
+	unsigned char* mem_block;
 	MemoryBlockInfo* next;
 };
 
@@ -17,8 +17,8 @@ public:
 
 	void* AddNode(const MEMORY_BASIC_INFORMATION mbi);
 	void InitScanMemory(unsigned long start, unsigned long stop, 
-                        unsigned char* val, unsigned int len);
-    void ScanMemoryCont(unsigned char* new_val);
+                        void* val, unsigned int len);
+    void ScanMemoryCont(void* new_val);
     void EndScan();
 	void PrintMemInfo() const;
     void PrintScanResults() const;
@@ -28,7 +28,7 @@ private:
     MemoryBlockInfo* head;
     MemoryBlockInfo* last;
     unsigned int scan_len;
-    unsigned char* scan_val;
+    void* scan_val;
     std::vector<std::pair<unsigned long, unsigned long>> scan_locs;
    
 };

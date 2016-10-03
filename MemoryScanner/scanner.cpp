@@ -15,6 +15,7 @@ Scanner::~Scanner() {
 		delete cur;
 		cur = next;
 	}
+    delete scan_val;
 
 }
 
@@ -52,7 +53,7 @@ void* Scanner::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
 }
 
 void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
-                                     unsigned char* val, unsigned int len) {
+                                     void* val, unsigned int len) {
 	MEMORY_BASIC_INFORMATION mbi;
 
     scan_val = new unsigned char[len];
@@ -99,7 +100,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
     //worrying about scan iterations
 }
 
-void Scanner::ScanMemoryCont(unsigned char* new_val){
+void Scanner::ScanMemoryCont(void* new_val){
     MemoryBlockInfo* cur = head;
     std::vector<std::pair<unsigned long, unsigned long>>::iterator it;
 
@@ -141,6 +142,7 @@ void Scanner::EndScan(){
 
     scan_locs.clear();
     scan_len = 0;
+    delete scan_val;
     scan_val = nullptr;
     head = nullptr;
     last = nullptr;
