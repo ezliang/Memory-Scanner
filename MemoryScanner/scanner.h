@@ -23,9 +23,8 @@ private:
         unsigned char* mem_block;
         MemoryBlockInfo* next;
     };
-
-    void _ScanRegion(unsigned long start, unsigned long stop, 
-                     const void* val);
+    
+    void _ScanRegion(void* val);
     void _ReScanMemory();
     HANDLE proc;
     MemoryBlockInfo* head;

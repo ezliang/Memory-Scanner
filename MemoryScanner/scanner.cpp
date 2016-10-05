@@ -58,6 +58,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
 
     scan_len = len;
 
+    //generate a list of checkable memory addresses only writable addresses are interesting
 	for (unsigned long query_addr = (unsigned long)start; query_addr < (unsigned long)stop;){
 		if (!VirtualQueryEx(proc, (void*)query_addr, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
 			break;
@@ -70,8 +71,13 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
         }
 		query_addr += mbi.RegionSize;
 	}
-    
-    _ScanRegion(start, stop,val);
+
+    ScanData sd;
+    sd.start = start;
+    sd.stop = stop;
+    sd.val = val;
+
+    _ScanRegion(val);
     //Should I truncate the linked list for blocks that don't make it in the search?
     //Right now I probably shouldn't since repopulating the list is more overhead than 
     //worrying about scan iterations
@@ -132,8 +138,7 @@ void Scanner::PrintMemInfo() const {
     }
 }
 
-void Scanner::_ScanRegion(unsigned long start, unsigned long stop, 
-                          const void* val) {
+void Scanner::_ScanRegion(ScanData sd) {
     MemoryBlockInfo* cur;
     DWORD offset = 0;
     unsigned char* region_end;
@@ -145,7 +150,7 @@ void Scanner::_ScanRegion(unsigned long start, unsigned long stop,
 
         for (DWORD offset = 0; offset < cur->region_size; offset++) {
 
-            if (!memcmp(MakePtr(void*, cur->mem_block, offset), val, scan_len)) {
+            if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd.val, scan_len)) {
                 //Decided to save a pointer to the mem_block copy since it won't be freed 
                 //until destructor is called or the val at the location isn't needed
                 block_loc = std::make_pair(
