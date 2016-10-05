@@ -60,8 +60,21 @@ void ScanMenu(HANDLE proc){
     s.PrintScanResults();
     free(val);
 
-    GetNewValue((void*)val, len, data_type);
-    free(val);
+    c = AskContScan();
+    while (c != 2) {
+        switch (c) {
+        case 1:
+            GetNewValue((void*)val, len, data_type);
+            s.ScanMemoryCont(val);
+            s.PrintScanResults();
+            free(val);
+            break;
+        default:
+            break;
+        }
+        c = AskContScan();
+    }
+
 }
 
 int ChangeScanOpt(){
@@ -120,7 +133,6 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
         val_len = sizeof(unsigned long);
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned long*)val_loc = (unsigned long)strtoul(c, nullptr, radix);
-        //printf("Value: %u\n", *(unsigned long*)val_loc);
         return DWORD;
     case 4:
         val_len = sizeof(float);
@@ -135,6 +147,12 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
     default:
         return INVALID;
     }
+
+
+}
+
+int AskContScan(){
+    int c;
 
 
 }
@@ -158,7 +176,7 @@ void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE data_type){
     if (!strncmp(input, "0x", 2))
         radix = 16;
 
-    switch (data_type){
+    switch (data_type) {
     case BYTE:
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned char*)val_loc = (unsigned char)strtoul(c, nullptr, radix);
