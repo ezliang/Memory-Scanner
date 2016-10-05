@@ -153,8 +153,10 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
 
 int AskContScan(){
     int c;
-
-
+    puts("1) Scan for value change");
+    puts("2) End scan");
+    scanf_s(" %d\n", &c);
+    return c;
 }
 
 void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE data_type){
