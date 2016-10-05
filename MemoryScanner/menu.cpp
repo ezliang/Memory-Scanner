@@ -155,7 +155,7 @@ int AskContScan(){
     int c;
     puts("1) Scan for value change");
     puts("2) End scan");
-    scanf_s(" %d\n", &c);
+    scanf_s(" %d", &c);
     return c;
 }
 
