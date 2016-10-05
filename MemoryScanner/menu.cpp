@@ -53,7 +53,7 @@ void ScanMenu(HANDLE proc){
 
     data_type = GetValueAndSize((void*)val, len);
 
-    if (len == INT_MAX)
+    if (data_type == INVALID)
         return;
 
     s.InitScanMemory(start, end, val, len);
