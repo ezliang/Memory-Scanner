@@ -182,18 +182,23 @@ void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE data_type){
     case _BYTE:
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned char*)val_loc = (unsigned char)strtoul(c, nullptr, radix);
+        break;
     case _SHORT:
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned short*)val_loc = (unsigned short)strtoul(c, nullptr, radix);
+        break;
     case _DWORD:
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned long*)val_loc = (unsigned long)strtoul(c, nullptr, radix);
+        break;
     case _FLOAT:
         val_loc = (unsigned char*)malloc(val_len);
         *(float*)val_loc = (float)strtof(c, nullptr);
+        break;
     case _DOUBLE:
         val_loc = (unsigned char*)malloc(val_len);
         *(double*)val_loc = (double)strtod(c, nullptr);
+        break;
     }
     
 }
