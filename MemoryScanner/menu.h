@@ -1,6 +1,6 @@
 #include <windows.h>
 
-typedef enum _DATA_TYPE{ BYTE, SHORT, DWORD, FLOAT, DOUBLE, STRING } DATA_TYPE;
+typedef enum _DATA_TYPE{ BYTE, SHORT, DWORD, FLOAT, DOUBLE, STRING, INVALID } DATA_TYPE;
 
 int GetScanType();
 void ScanMenu(HANDLE proc);
