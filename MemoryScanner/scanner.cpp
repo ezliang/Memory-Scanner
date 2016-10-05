@@ -72,11 +72,6 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
 		query_addr += mbi.RegionSize;
 	}
 
-    ScanData sd;
-    sd.start = start;
-    sd.stop = stop;
-    sd.val = val;
-
     _ScanRegion(val);
     //Should I truncate the linked list for blocks that don't make it in the search?
     //Right now I probably shouldn't since repopulating the list is more overhead than 
@@ -138,7 +133,7 @@ void Scanner::PrintMemInfo() const {
     }
 }
 
-void Scanner::_ScanRegion(ScanData sd) {
+void Scanner::_ScanRegion(void* val) {
     MemoryBlockInfo* cur;
     DWORD offset = 0;
     unsigned char* region_end;
@@ -150,7 +145,7 @@ void Scanner::_ScanRegion(ScanData sd) {
 
         for (DWORD offset = 0; offset < cur->region_size; offset++) {
 
-            if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd.val, scan_len)) {
+            if (!memcmp(MakePtr(void*, cur->mem_block, offset), val, scan_len)) {
                 //Decided to save a pointer to the mem_block copy since it won't be freed 
                 //until destructor is called or the val at the location isn't needed
                 block_loc = std::make_pair(
