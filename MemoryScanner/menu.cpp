@@ -55,9 +55,9 @@ void ScanMenu(HANDLE proc){
 
     s.InitScanMemory(start, end, val, len);
     s.PrintScanResults();
-    
-    
-    
+    free(val);
+
+    GetNewValue((void*)val, len);
     free(val);
 }
 
@@ -136,8 +136,25 @@ void GetValueAndSize(void*& val_loc, size_t& val_len){
 
 }
 
-void GetNewValue(unsigned char*& val, const size_t  val_len){
+void GetNewValue(void*& val, const size_t  val_len){
 
+    char input[16];
+    int radix;
 
+    printf("Value: ");
+    fflush(stdin);
+    fgets(input, 15, stdin);
+
+    char* c;
+    if (c = strchr(input, '\n'))
+        *c = '\x00';
+
+    radix = 10;
+    c = input;
+
+    if (!strncmp(input, "0x", 2))
+        radix = 16;
+
+    
 
 }
