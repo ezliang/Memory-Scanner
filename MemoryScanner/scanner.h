@@ -8,7 +8,7 @@ struct MemoryBlockInfo{
 	unsigned char* mem_block;
 	MemoryBlockInfo* next;
 };
-
+//Scanner class knows nothing about data types only location and length
 class Scanner{
 
 public:

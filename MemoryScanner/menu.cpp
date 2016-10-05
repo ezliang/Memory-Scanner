@@ -1,6 +1,8 @@
 #include "menu.h"
 #include "scanner.h"
 #include <stdio.h>
+
+
 int GetScanType(){
 
     int c;
@@ -71,7 +73,7 @@ int ChangeScanOpt(){
     return c;
 }
 
-void GetValueAndSize(void*& val_loc, size_t& val_len){
+DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
     
     int choice;
     //I've decided to use the largest data type to hold values then 
@@ -136,7 +138,7 @@ void GetValueAndSize(void*& val_loc, size_t& val_len){
 
 }
 
-void GetNewValue(void*& val, const size_t  val_len){
+void GetNewValue(void*& val, const size_t  val_len, ){
 
     char input[16];
     int radix;
