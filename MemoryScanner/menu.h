@@ -6,4 +6,4 @@ int GetScanType();
 void ScanMenu(HANDLE proc);
 int ChangeScanOpt();
 DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len);
-void GetNewValue(void*& val, const size_t  val_len, DATA_TYPE dt)
+void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE dt)

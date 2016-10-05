@@ -20,6 +20,7 @@ void ScanMenu(HANDLE proc){
     unsigned int len = 0;
     void* val;
     unsigned long tmp;
+    DATA_TYPE data_type;
     int c;
 
     c = ChangeScanOpt();
@@ -50,7 +51,7 @@ void ScanMenu(HANDLE proc){
         c = ChangeScanOpt();
     }
 
-    GetValueAndSize((void*)val, len);
+    data_type = GetValueAndSize((void*)val, len);
 
     if (len == INT_MAX)
         return;
@@ -59,7 +60,7 @@ void ScanMenu(HANDLE proc){
     s.PrintScanResults();
     free(val);
 
-    GetNewValue((void*)val, len);
+    GetNewValue((void*)val, len, data_type);
     free(val);
 }
 
@@ -138,7 +139,7 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
 
 }
 
-void GetNewValue(void*& val, const size_t  val_len, DATA_TYPE dt){
+void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE data_type){
 
     char input[16];
     int radix;
@@ -157,10 +158,24 @@ void GetNewValue(void*& val, const size_t  val_len, DATA_TYPE dt){
     if (!strncmp(input, "0x", 2))
         radix = 16;
 
-    switch (dt){
-    
-    
-    
+    switch (data_type){
+    case BYTE:
+        val_loc = (unsigned char*)malloc(val_len);
+        *(unsigned char*)val_loc = (unsigned char)strtoul(c, nullptr, radix);
+    case SHORT:
+        val_loc = (unsigned char*)malloc(val_len);
+        *(unsigned short*)val_loc = (unsigned short)strtoul(c, nullptr, radix);
+    case DWORD:
+        val_loc = (unsigned char*)malloc(val_len);
+        *(unsigned long*)val_loc = (unsigned long)strtoul(c, nullptr, radix);
+    case FLOAT:
+        val_loc = (unsigned char*)malloc(val_len);
+        *(float*)val_loc = (float)strtof(c, nullptr);
+    case DOUBLE:
+        val_loc = (unsigned char*)malloc(val_len);
+        *(double*)val_loc = (double)strtod(c, nullptr);
     }
+    
+    
 
 }
