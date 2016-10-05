@@ -70,7 +70,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
         }
 		query_addr += mbi.RegionSize;
 	}
-
+    
     _ScanRegion(start, stop,val);
     //Should I truncate the linked list for blocks that don't make it in the search?
     //Right now I probably shouldn't since repopulating the list is more overhead than 

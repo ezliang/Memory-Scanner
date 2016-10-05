@@ -1,13 +1,6 @@
 #include <Windows.h>
 #include <vector>
 
-
-struct MemoryBlockInfo{
-	void* region_start;
-	unsigned long region_size;
-	unsigned char* mem_block;
-	MemoryBlockInfo* next;
-};
 //Scanner class knows nothing about data types only location and length
 class Scanner{
 
@@ -23,6 +16,14 @@ public:
 	void PrintMemInfo() const;
     void PrintScanResults() const;
 private:
+
+    struct MemoryBlockInfo{
+        void* region_start;
+        unsigned long region_size;
+        unsigned char* mem_block;
+        MemoryBlockInfo* next;
+    };
+
     void _ScanRegion(unsigned long start, unsigned long stop, 
                      const void* val);
     void _ReScanMemory();
