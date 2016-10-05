@@ -23,6 +23,8 @@ public:
 	void PrintMemInfo() const;
     void PrintScanResults() const;
 private:
+    void _ScanRegion(unsigned long start, unsigned long stop, 
+                     const void* val);
     void _ReScanMemory();
     HANDLE proc;
     MemoryBlockInfo* head;

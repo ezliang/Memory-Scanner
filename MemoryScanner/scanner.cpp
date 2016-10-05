@@ -71,28 +71,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
 		query_addr += mbi.RegionSize;
 	}
 
-    MemoryBlockInfo* cur;
-    DWORD offset = 0;
-    unsigned char* region_end;
-    std::pair <unsigned long, unsigned long> block_loc;
-    cur = head;
-
-    while (cur) {
-        region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
-        
-        for (DWORD offset = 0; offset < cur->region_size; offset++) {
-            
-            if (!memcmp(MakePtr(void*, cur->mem_block, offset), val, len)) {
-                //Decided to save a pointer to the mem_block copy since it won't be freed 
-                //until destructor is called or the val at the location isn't needed
-                block_loc = std::make_pair(
-                            (unsigned long)cur->region_start, 
-                            offset);
-                scan_locs.push_back(block_loc);
-            }
-        }
-        cur = cur->next;
-    }
+    _ScanRegion(start, stop,val);
     //Should I truncate the linked list for blocks that don't make it in the search?
     //Right now I probably shouldn't since repopulating the list is more overhead than 
     //worrying about scan iterations
@@ -149,6 +128,32 @@ void Scanner::PrintMemInfo() const {
 
     while (cur) {
         printf("Address:\t0x%p\nSize:\t\t0x%x\n", cur->region_start, cur->region_size);
+        cur = cur->next;
+    }
+}
+
+void Scanner::_ScanRegion(unsigned long start, unsigned long stop, 
+                          const void* val) {
+    MemoryBlockInfo* cur;
+    DWORD offset = 0;
+    unsigned char* region_end;
+    std::pair <unsigned long, unsigned long> block_loc;
+    cur = head;
+
+    while (cur) {
+        region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
+
+        for (DWORD offset = 0; offset < cur->region_size; offset++) {
+
+            if (!memcmp(MakePtr(void*, cur->mem_block, offset), val, scan_len)) {
+                //Decided to save a pointer to the mem_block copy since it won't be freed 
+                //until destructor is called or the val at the location isn't needed
+                block_loc = std::make_pair(
+                    (unsigned long)cur->region_start,
+                    offset);
+                scan_locs.push_back(block_loc);
+            }
+        }
         cur = cur->next;
     }
 }
