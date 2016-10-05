@@ -138,7 +138,7 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
 
 }
 
-void GetNewValue(void*& val, const size_t  val_len, ){
+void GetNewValue(void*& val, const size_t  val_len, DATA_TYPE dt){
 
     char input[16];
     int radix;
@@ -157,6 +157,10 @@ void GetNewValue(void*& val, const size_t  val_len, ){
     if (!strncmp(input, "0x", 2))
         radix = 16;
 
+    switch (dt){
     
+    
+    
+    }
 
 }
