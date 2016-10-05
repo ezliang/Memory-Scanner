@@ -109,30 +109,30 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
         val_len = 1;
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned char*)val_loc = (unsigned char)strtoul(c, nullptr, radix);
-        break;
+        return BYTE;
     case 2:
         val_len = sizeof(short);
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned short*)val_loc = (unsigned short)strtoul(c, nullptr, radix);
-        break;
+        return SHORT;
     case 3:
         val_len = sizeof(unsigned long);
         val_loc = (unsigned char*)malloc(val_len);
         *(unsigned long*)val_loc = (unsigned long)strtoul(c, nullptr, radix);
         //printf("Value: %u\n", *(unsigned long*)val_loc);
-        break;
+        return DWORD;
     case 4:
         val_len = sizeof(float);
         val_loc = (unsigned char*)malloc(val_len);
         *(float*)val_loc = (float)strtof(c, nullptr);
-        break;
+        return FLOAT;
     case 5:
         val_len = sizeof(double);
         val_loc = (unsigned char*)malloc(val_len);
         *(double*)val_loc = (double)strtod(c, nullptr);
-        break;
+        return DOUBLE;
     default:
-        val_len = INT_MAX;
+        return INVALID;
     }
 
 
