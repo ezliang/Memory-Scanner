@@ -1,40 +1,19 @@
-﻿Build started 10/4/2016 10:59:05 PM.
+﻿Build started 10/4/2016 10:59:51 PM.
      1>Project "C:\Users\Eric\documents\visual studio 2013\Projects\MemoryScanner\MemoryScanner\MemoryScanner.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt menu.cpp memscan.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt menu.cpp
          menu.cpp
-     1>menu.cpp(56): error C2065: 'INVALID' : undeclared identifier
-     1>menu.cpp(126): error C2275: 'BYTE' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(158) : see declaration of 'BYTE'
-     1>menu.cpp(131): error C2275: 'SHORT' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(384) : see declaration of 'SHORT'
-     1>menu.cpp(136): error C2275: 'DWORD' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(156) : see declaration of 'DWORD'
-     1>menu.cpp(141): error C2275: 'FLOAT' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(160) : see declaration of 'FLOAT'
-     1>menu.cpp(146): error C2275: 'DOUBLE' : illegal use of this type as an expression
-                 c:\program files (x86)\windows kits\8.1\include\shared\wtypesbase.h(147) : see declaration of 'DOUBLE'
-     1>menu.cpp(148): error C2065: 'INVALID' : undeclared identifier
-     1>menu.cpp(182): error C2275: 'BYTE' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(158) : see declaration of 'BYTE'
-     1>menu.cpp(182): error C2051: case expression not constant
-     1>menu.cpp(185): error C2275: 'SHORT' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(384) : see declaration of 'SHORT'
-     1>menu.cpp(185): error C2051: case expression not constant
-     1>menu.cpp(188): error C2275: 'DWORD' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(156) : see declaration of 'DWORD'
-     1>menu.cpp(188): error C2051: case expression not constant
-     1>menu.cpp(191): error C2275: 'FLOAT' : illegal use of this type as an expression
-                 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(160) : see declaration of 'FLOAT'
-     1>menu.cpp(191): error C2051: case expression not constant
-     1>menu.cpp(194): error C2275: 'DOUBLE' : illegal use of this type as an expression
-                 c:\program files (x86)\windows kits\8.1\include\shared\wtypesbase.h(147) : see declaration of 'DOUBLE'
-     1>menu.cpp(194): error C2051: case expression not constant
-     1>menu.cpp(197): warning C4060: switch statement contains no 'case' or 'default' labels
-         memscan.cpp
-     1>memscan.cpp(21): warning C4101: 'mod_end' : unreferenced local variable
-     1>Done Building Project "C:\Users\Eric\documents\visual studio 2013\Projects\MemoryScanner\MemoryScanner\MemoryScanner.vcxproj" (Build target(s)) -- FAILED.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Eric\documents\visual studio 2013\Projects\MemoryScanner\Release\MemoryScanner.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Eric\documents\visual studio 2013\Projects\MemoryScanner\Release\MemoryScanner.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Eric\documents\visual studio 2013\Projects\MemoryScanner\Release\MemoryScanner.lib" /MACHINE:X86 /SAFESEH Release\error.obj
+         Release\menu.obj
+         Release\scanner.obj
+         Release\modinfo.obj
+         Release\memscan.obj
+         Generating code
+         Finished generating code
+         MemoryScanner.vcxproj -> C:\Users\Eric\documents\visual studio 2013\Projects\MemoryScanner\Release\MemoryScanner.exe
+     1>Done Building Project "C:\Users\Eric\documents\visual studio 2013\Projects\MemoryScanner\MemoryScanner\MemoryScanner.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:01.51
+Time Elapsed 00:00:01.70
