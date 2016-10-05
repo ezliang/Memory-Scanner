@@ -51,7 +51,7 @@ void ScanMenu(HANDLE proc){
         c = ChangeScanOpt();
     }
 
-    data_type = GetValueAndSize((void*)val, len);
+    data_type = GetValueAndSize(val, len);
 
     if (data_type == _INVALID)
         return;
@@ -64,7 +64,7 @@ void ScanMenu(HANDLE proc){
     while (c != 2) {
         switch (c) {
         case 1:
-            GetNewValue((void*)val, len, data_type);
+            GetNewValue(val, len, data_type);
             s.ScanMemoryCont(val);
             s.PrintScanResults();
             free(val);
@@ -196,6 +196,4 @@ void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE data_type){
         *(double*)val_loc = (double)strtod(c, nullptr);
     }
     
-    
-
 }
