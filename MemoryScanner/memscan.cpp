@@ -17,26 +17,14 @@ int main(int argc, char** argv){
 		return 0;
 	} 
 
-	unsigned long addr = 0;
-	unsigned long mod_end;
 	unsigned long pid = strtol(argv[1], NULL, 10);
-	unsigned long mod_size = 0;
+
 	HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 	
 	if (!proc) {
 		fprintf(stderr,"Failed to open process\n");
         ExitShowError();
 	}
-
-	addr = GetBaseAddress(proc);
-
-	if (!addr)
-		ExitShowError();
-
-	mod_size = GetModSize(proc,(HMODULE)addr);
-
-	if (!mod_size)
-		ExitShowError();
 
     int c = GetScanType();
    
