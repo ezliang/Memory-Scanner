@@ -100,7 +100,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
     std::sort(scan_locs.begin(), scan_locs.end(), []
         (const std::pair<unsigned int,unsigned int> lhs, 
         const std::pair<unsigned int,unsigned int> rhs){
-        return lhs.first > rhs.first;
+        return lhs.first < rhs.first;
     });
 
     CloseHandle(mutex);
