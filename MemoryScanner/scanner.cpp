@@ -138,20 +138,20 @@ HANDLE mutex;
 
 void Scanner::_ScanRegion(void* val) {
     MemoryBlockInfo* cur = head;
+    const size_t num_threads = 4;
     mutex = CreateMutex(NULL, false, NULL);
-    ScanData sd;
-    sd.val = val;
-    sd.results = &scan_locs;
-    sd.scan_len = scan_len;
 
-    const size_t num_threads = 2;
-
+    ScanData sd[num_threads];
+  
     HANDLE thread_handles[num_threads];
     
     while (cur) {
         for (size_t i = 0; i < num_threads; ++i){
-            sd.cur = cur;
-            if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd, 0, NULL)))
+            sd[i].val = val;
+            sd[i].results = &scan_locs;
+            sd[i].scan_len = scan_len;
+            sd[i].cur = cur;
+            if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd[i], 0, NULL)))
                 ExitShowError();
             cur = cur->next;
         }
@@ -183,14 +183,13 @@ static DWORD WINAPI CompareRegion(void* param){
             block_loc = std::make_pair(
                 (unsigned long)cur->region_start,
                 offset);
-            WaitForSingleObject(mutex, INFINITE);
+            wait_res = WaitForSingleObject(mutex, INFINITE);
             sd->results->push_back(block_loc);
             ReleaseMutex(mutex);
         }
     }
     
-    
-
+    return true;
 }
 
 //This shoudn't really be called externally I can only think of it being
