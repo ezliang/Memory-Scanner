@@ -90,8 +90,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
             sd[i].cur = cur;
             if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd[i], 0, NULL)))
                 ExitShowError();
-            if(cur)
-                cur = cur->next;
+            cur = cur->next;
         }
         WaitForMultipleObjects(num_threads, thread_handles, false, INFINITE);
     }

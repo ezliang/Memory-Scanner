@@ -114,8 +114,6 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
     radix = 10;
     c = input;
 
-    if (!strncmp(input, "0x", 2)) 
-        radix = 16;
 
     //can cause the str conversions to fail but that seems like a user error
     switch (choice) {
@@ -148,7 +146,6 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
         return _INVALID;
     }
 
-
 }
 
 int AskContScan(){
@@ -162,43 +159,43 @@ int AskContScan(){
 void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE data_type){
 
     char input[16];
-    int radix;
-
+    char* c = nullptr;
     printf("Value: ");
     fflush(stdin);
     fgets(input, 15, stdin);
 
-    char* c;
     if (c = strchr(input, '\n'))
         *c = '\x00';
 
-    radix = 10;
-    c = input;
-
     if (!strncmp(input, "0x", 2))
-        radix = 16;
+        WriteValueMemory(input, val_loc, data_type, val_len, 16);
+    else
+        WriteValueMemory(input, val_loc, data_type, val_len);
+}
+
+void* WriteValueMemory(char* input, void*& val_loc, DATA_TYPE data_type, int val_len, int radix){
 
     switch (data_type) {
     case _BYTE:
         val_loc = (unsigned char*)malloc(val_len);
-        *(unsigned char*)val_loc = (unsigned char)strtoul(c, nullptr, radix);
+        *(unsigned char*)val_loc = (unsigned char)strtoul(input, nullptr, radix);
         break;
     case _SHORT:
         val_loc = (unsigned char*)malloc(val_len);
-        *(unsigned short*)val_loc = (unsigned short)strtoul(c, nullptr, radix);
+        *(unsigned short*)val_loc = (unsigned short)strtoul(input, nullptr, radix);
         break;
     case _DWORD:
         val_loc = (unsigned char*)malloc(val_len);
-        *(unsigned long*)val_loc = (unsigned long)strtoul(c, nullptr, radix);
+        *(unsigned long*)val_loc = (unsigned long)strtoul(input, nullptr, radix);
         break;
     case _FLOAT:
         val_loc = (unsigned char*)malloc(val_len);
-        *(float*)val_loc = (float)strtof(c, nullptr);
+        *(float*)val_loc = (float)strtof(input, nullptr);
         break;
     case _DOUBLE:
         val_loc = (unsigned char*)malloc(val_len);
-        *(double*)val_loc = (double)strtod(c, nullptr);
+        *(double*)val_loc = (double)strtod(input, nullptr);
         break;
     }
-    
+    return val_loc;
 }
