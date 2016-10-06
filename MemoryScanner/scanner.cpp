@@ -5,7 +5,11 @@
 #include <utility>
 #include "config.h"
 
-#define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
+#if ARCH == 32
+    #define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
+#else ARCH == 64
+    #define MakePtr( cast, ptr, addValue ) (cast)( (unsigned long long*)(ptr) + (unsigned long long*)(addValue))
+#endif
 
 Scanner::~Scanner() {
 
@@ -55,6 +59,7 @@ void* Scanner::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
     return new_block;
 }
 HANDLE mutex;
+#if ARCH == 32
 void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
                                      void* val, unsigned int len) {
 	MEMORY_BASIC_INFORMATION mbi;
@@ -108,6 +113,61 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
     //Right now I probably shouldn't since repopulating the list is more overhead than 
     //worrying about scan iterations
 }
+#elif ARCH == 64
+void Scanner::InitScanMemory(unsigned long long start, unsigned long long stop,
+    void* val, unsigned int len) {
+    MEMORY_BASIC_INFORMATION mbi;
+
+    scan_len = len;
+
+    //generate a list of checkable memory addresses only writable addresses are interesting
+    for (unsigned long long query_addr = (unsigned long long)start; query_addr < (unsigned long long)stop;){
+        if (!VirtualQueryEx(proc, (void*)query_addr, &mbi, sizeof(MEMORY_BASIC_INFORMATION)))
+            break;
+        if (mbi.State & MEM_COMMIT &&
+            mbi.Protect & (PAGE_EXECUTE_READWRITE |
+            PAGE_READWRITE |
+            PAGE_EXECUTE_WRITECOPY) &&
+            (mbi.Protect & PAGE_GUARD) != PAGE_GUARD) {
+            this->AddNode(mbi);
+        }
+        query_addr += mbi.RegionSize;
+    }
+
+    MemoryBlockInfo* cur = head;
+    const size_t num_threads = 4;
+    mutex = CreateMutex(NULL, false, NULL);
+
+    ScanData sd[num_threads];
+
+    HANDLE thread_handles[num_threads];
+
+    while (cur) {
+        for (size_t i = 0; i < num_threads && cur; ++i){
+            sd[i].val = val;
+            sd[i].results = &scan_locs;
+            sd[i].scan_len = scan_len;
+            sd[i].cur = cur;
+            if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd[i], 0, NULL)))
+                ExitShowError();
+            cur = cur->next;
+        }
+        WaitForMultipleObjects(num_threads, thread_handles, false, INFINITE);
+    }
+
+    //to join the threads just sort the vector
+    std::sort(scan_locs.begin(), scan_locs.end(), []
+        (const std::pair<unsigned long long, unsigned long long> lhs,
+        const std::pair<unsigned long, unsigned long> rhs){
+        return lhs.first < rhs.first;
+    });
+
+    CloseHandle(mutex);
+    //Should I truncate the linked list for blocks that don't make it in the search?
+    //Right now I probably shouldn't since repopulating the list is more overhead than 
+    //worrying about scan iterations
+}
+#endif
 
 void Scanner::ScanMemoryCont(void* new_val){
     MemoryBlockInfo* cur = head;
