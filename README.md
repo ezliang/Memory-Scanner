@@ -1,2 +1,2 @@
-Small command line memory scanner which imitates Cheat Engine's scanning functionality.
+Small command line memory scanner which imitates CheatEngine's scanning functionality.
 
