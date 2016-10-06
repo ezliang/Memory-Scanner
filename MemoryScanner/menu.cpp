@@ -68,18 +68,22 @@ void ScanMenu(HANDLE proc){
 
     c = AskContScan();
     int diff;
+    std::vector<std::pair<unsigned long long, unsigned long long>> last = s.scan_locs;
+
     while (c != 3) {
         switch (c) {
         case 1:
             GetNewValue(val, len, data_type);
-            diff = s.get_num_results();
+            diff = s.scan_locs.size();
             s.ScanMemoryCont(val);
             s.PrintScanResults();
-            printf("Reduced %d results\n", diff - s.get_num_results());
+            printf("Reduced %d results\n", diff - s.scan_locs.size());
             free(val);
             break;
         case 2:
-
+            //only the case in the first iteration
+            if (s.scan_locs != last)
+                s.scan_locs = last;
             break;
         default:
             break;
@@ -94,7 +98,7 @@ int ChangeScanOpt(){
     puts("1) Change start address [Default: 0]");
     puts("2) Change end address [Default: 0]");
     puts("3) Start scan");
-
+    printf(">> ");
     scanf_s(" %d", &c);
     return c;
 }
@@ -113,6 +117,7 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
     puts("\t3) Dword");
     puts("\t4) Float");
     puts("\t5) Double");
+    printf(">> ");
 
     scanf_s(" %d", &choice);
     printf("Value: ");
