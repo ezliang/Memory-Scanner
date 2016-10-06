@@ -31,7 +31,6 @@ public:
     void PrintScanResults() const;
 private:
     
-    void _ScanRegion(void* val);
     void _ReScanMemory();
     HANDLE proc;
     MemoryBlockInfo* head;

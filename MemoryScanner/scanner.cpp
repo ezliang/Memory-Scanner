@@ -52,7 +52,7 @@ void* Scanner::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
 
     return new_block;
 }
-
+HANDLE mutex;
 void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
                                      void* val, unsigned int len) {
 	MEMORY_BASIC_INFORMATION mbi;
@@ -73,7 +73,30 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
 		query_addr += mbi.RegionSize;
 	}
 
-    _ScanRegion(val);
+    MemoryBlockInfo* cur = head;
+    const size_t num_threads = 4;
+    mutex = CreateMutex(NULL, false, NULL);
+
+    ScanData sd[num_threads];
+
+    HANDLE thread_handles[num_threads];
+
+    while (cur) {
+        for (size_t i = 0; i < num_threads; ++i){
+            sd[i].val = val;
+            sd[i].results = &scan_locs;
+            sd[i].scan_len = scan_len;
+            sd[i].cur = cur;
+            if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd[i], 0, NULL)))
+                ExitShowError();
+            cur = cur->next;
+        }
+        WaitForMultipleObjects(num_threads, thread_handles, false, INFINITE);
+    }
+
+    //to join the threads just sort the vector
+
+    CloseHandle(mutex);
     //Should I truncate the linked list for blocks that don't make it in the search?
     //Right now I probably shouldn't since repopulating the list is more overhead than 
     //worrying about scan iterations
@@ -134,34 +157,6 @@ void Scanner::PrintMemInfo() const {
     }
 }
 
-HANDLE mutex;
-
-void Scanner::_ScanRegion(void* val) {
-    MemoryBlockInfo* cur = head;
-    const size_t num_threads = 4;
-    mutex = CreateMutex(NULL, false, NULL);
-
-    ScanData sd[num_threads];
-  
-    HANDLE thread_handles[num_threads];
-    
-    while (cur) {
-        for (size_t i = 0; i < num_threads; ++i){
-            sd[i].val = val;
-            sd[i].results = &scan_locs;
-            sd[i].scan_len = scan_len;
-            sd[i].cur = cur;
-            if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd[i], 0, NULL)))
-                ExitShowError();
-            cur = cur->next;
-        }
-        WaitForMultipleObjects(num_threads, thread_handles, false, INFINITE);
-    }
-
-    //to join the threads just sort the vector
-   
-    CloseHandle(mutex);
-}
 
 static DWORD WINAPI CompareRegion(void* param){
     ScanData* sd = (ScanData*)param;
