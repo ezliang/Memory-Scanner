@@ -15,9 +15,15 @@ int GetScanType(){
 
 void ScanMenu(HANDLE proc){
     Scanner s(proc);
+    
+#if _WIN32
     unsigned long start = 0;
     unsigned long end = 0x7fffffff;
-    unsigned int len = 0;
+#elif _WIN64
+    unsigned long long start = 0;
+    unsigned long long end = 0x7fffffffffffffff;
+#endif
+    size_t len = 0;
     void* val;
     unsigned long tmp;
     DATA_TYPE data_type;

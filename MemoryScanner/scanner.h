@@ -4,10 +4,11 @@
 
 struct MemoryBlockInfo{
     void* region_start;
-#if _WIN32
-    unsigned long region_size;
-#elif _WIN64
+
+#if _WIN64
     unsigned long long region_size;
+#else
+    unsigned long region_size;
 #endif
     unsigned char* mem_block;
     MemoryBlockInfo* next;
@@ -17,10 +18,10 @@ struct ScanData{
     void* val;
     unsigned int scan_len;
     MemoryBlockInfo* cur;
-#if _WIN32
-    std::vector<std::pair<unsigned long, unsigned long>>* results;
-#elif _WIN64
+#if _WIN64
     std::vector<std::pair<unsigned long long, unsigned long long>>* results;
+#else
+    std::vector<std::pair<unsigned long, unsigned long>>* results;
 #endif
 };
 
@@ -32,11 +33,12 @@ public:
 	~Scanner();
 
 	void* AddNode(const MEMORY_BASIC_INFORMATION mbi);
-#if _WIN32
-	void InitScanMemory(unsigned long start, unsigned long stop, 
-                        void* val, unsigned int len);
-#elif _WIN64
+	
+#if _WIN64
     void InitScanMemory(unsigned long long start, unsigned long long stop,
+        void* val, unsigned int len);
+#else
+    void InitScanMemory(unsigned long start, unsigned long stop,
         void* val, unsigned int len);
 #endif
     void ScanMemoryCont(void* new_val);
@@ -49,10 +51,10 @@ private:
     MemoryBlockInfo* head;
     MemoryBlockInfo* last;
     unsigned int scan_len;
-#if _WIN32
-    std::vector<std::pair<unsigned long, unsigned long>> scan_locs;
-#else
+#if _WIN64
     std::vector<std::pair<unsigned long long, unsigned long long>> scan_locs;
+#else
+    std::vector<std::pair<unsigned long, unsigned long>> scan_locs;
 #endif
 };
 
