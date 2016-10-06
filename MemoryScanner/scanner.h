@@ -1,6 +1,13 @@
 #include <Windows.h>
 #include <vector>
 
+struct MemoryBlockInfo{
+    void* region_start;
+    unsigned long region_size;
+    unsigned char* mem_block;
+    MemoryBlockInfo* next;
+};
+
 //Scanner class knows nothing about data types only location and length
 class Scanner{
 
@@ -17,11 +24,10 @@ public:
     void PrintScanResults() const;
 private:
 
-    struct MemoryBlockInfo{
-        void* region_start;
-        unsigned long region_size;
-        unsigned char* mem_block;
-        MemoryBlockInfo* next;
+    struct ScanData{
+        void* val;
+        MemoryBlockInfo* cur;
+        std::vector<std::pair<unsigned long, unsigned long>>* results;
     };
     
     void _ScanRegion(void* val);
