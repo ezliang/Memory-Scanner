@@ -125,27 +125,27 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
     switch (choice) {
     case 1:
         val_len = 1;
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(unsigned char*)val_loc = (unsigned char)strtoul(c, nullptr, radix);
         return _BYTE;
     case 2:
         val_len = sizeof(short);
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(unsigned short*)val_loc = (unsigned short)strtoul(c, nullptr, radix);
         return _SHORT;
     case 3:
         val_len = sizeof(unsigned long);
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(unsigned long*)val_loc = (unsigned long)strtoul(c, nullptr, radix);
         return _DWORD;
     case 4:
         val_len = sizeof(float);
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(float*)val_loc = (float)strtof(c, nullptr);
         return _FLOAT;
     case 5:
         val_len = sizeof(double);
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(double*)val_loc = (double)strtod(c, nullptr);
         return _DOUBLE;
     default:
@@ -183,23 +183,23 @@ void* WriteValueMemory(char* input, void*& val_loc, DATA_TYPE data_type, int val
 
     switch (data_type) {
     case _BYTE:
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(unsigned char*)val_loc = (unsigned char)strtoul(input, nullptr, radix);
         break;
     case _SHORT:
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(unsigned short*)val_loc = (unsigned short)strtoul(input, nullptr, radix);
         break;
     case _DWORD:
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(unsigned long*)val_loc = (unsigned long)strtoul(input, nullptr, radix);
         break;
     case _FLOAT:
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(float*)val_loc = (float)strtof(input, nullptr);
         break;
     case _DOUBLE:
-        val_loc = (unsigned char*)malloc(val_len);
+        val_loc = malloc(val_len);
         *(double*)val_loc = (double)strtod(input, nullptr);
         break;
     }
