@@ -133,29 +133,48 @@ void Scanner::PrintMemInfo() const {
     }
 }
 
+HANDLE mutex;
+
 void Scanner::_ScanRegion(void* val) {
+    
+    mutex = CreateMutex(NULL, false, NULL);
+    ScanData sd;
+    sd.val = val;
+    sd.cur = head;
+    sd.results = &scan_locs;
+    sd.scan_len = scan_len;
+
+    CreateThread(0, NULL, CompareRegion, &sd, 0, NULL);
+    //should create threads here 
+   
+    CloseHandle(mutex);
+}
+
+DWORD WINAPI CompareRegion(void* param){
+    ScanData sd = *(ScanData*)param;
     MemoryBlockInfo* cur;
-    DWORD offset = 0;
     unsigned char* region_end;
     std::pair <unsigned long, unsigned long> block_loc;
-    cur = head;
+    unsigned long offset = 0;
+    unsigned char* region_end;
 
     while (cur) {
         region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
 
         for (DWORD offset = 0; offset < cur->region_size; offset++) {
 
-            if (!memcmp(MakePtr(void*, cur->mem_block, offset), val, scan_len)) {
+            if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd.val, sd.scan_len)) {
                 //Decided to save a pointer to the mem_block copy since it won't be freed 
                 //until destructor is called or the val at the location isn't needed
                 block_loc = std::make_pair(
                     (unsigned long)cur->region_start,
                     offset);
-                scan_locs.push_back(block_loc);
+                sd.results->push_back(block_loc);
             }
         }
         cur = cur->next;
     }
+
 }
 
 //This shoudn't really be called externally I can only think of it being
