@@ -71,6 +71,7 @@
     <ClCompile Include="memscan.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="scanner.h" />

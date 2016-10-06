@@ -3,11 +3,11 @@
 #include "error.h"
 #include <algorithm>
 #include <utility>
-#include "config.h"
 
-#if ARCH == 32
+
+#if _WIN32
     #define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
-#else ARCH == 64
+#elif _WIN64
     #define MakePtr( cast, ptr, addValue ) (cast)( (unsigned long long*)(ptr) + (unsigned long long*)(addValue))
 #endif
 
@@ -158,7 +158,7 @@ void Scanner::InitScanMemory(unsigned long long start, unsigned long long stop,
     //to join the threads just sort the vector
     std::sort(scan_locs.begin(), scan_locs.end(), []
         (const std::pair<unsigned long long, unsigned long long> lhs,
-        const std::pair<unsigned long, unsigned long> rhs){
+        const std::pair<unsigned long long, unsigned long long> rhs){
         return lhs.first < rhs.first;
     });
 
@@ -168,6 +168,8 @@ void Scanner::InitScanMemory(unsigned long long start, unsigned long long stop,
     //worrying about scan iterations
 }
 #endif
+
+#if ARCH == 32
 
 void Scanner::ScanMemoryCont(void* new_val){
     MemoryBlockInfo* cur = head;
@@ -197,6 +199,37 @@ void Scanner::ScanMemoryCont(void* new_val){
     }
 }
 
+#elif ARCH == 64
+void Scanner::ScanMemoryCont(void* new_val){
+    MemoryBlockInfo* cur = head;
+    std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it;
+
+    _ReScanMemory();
+
+    for (it = scan_locs.begin(); it != scan_locs.end();) {
+        //since the locations are pushed in order of mem_blocks this should work
+        if ((unsigned long long)cur->mem_block != it->first){
+            while (cur && (unsigned long long)cur->region_start != it->first) {
+                cur = cur->next;
+            }
+        }
+
+        if (!cur) break;
+
+        //Keep only blocks that changed to the search value
+        if (memcmp(MakePtr(void*, cur->mem_block, it->second),
+            new_val, scan_len)){
+            it = scan_locs.erase(it);
+        }
+        else {
+            //block has change value;
+            ++it;
+        }
+
+    }
+}
+#endif
+
 void Scanner::EndScan(){
 
     MemoryBlockInfo* cur = head;
@@ -224,7 +257,7 @@ void Scanner::PrintMemInfo() const {
     }
 }
 
-
+#if ARCH == 32
 static DWORD WINAPI CompareRegion(void* param){
     ScanData* sd = (ScanData*)param;
     MemoryBlockInfo* cur = sd->cur;
@@ -253,6 +286,36 @@ static DWORD WINAPI CompareRegion(void* param){
     
     return true;
 }
+#elif ARCH == 64
+static DWORD WINAPI CompareRegion(void* param){
+    ScanData* sd = (ScanData*)param;
+    MemoryBlockInfo* cur = sd->cur;
+    std::pair <unsigned long long, unsigned long long> block_loc;
+    unsigned long offset = 0;
+    unsigned char* region_end;
+
+    unsigned long wait_res;
+
+
+    region_end = MakePtr(unsigned char*, cur->mem_block, cur->region_size);
+
+    for (DWORD offset = 0; offset < cur->region_size; offset++) {
+
+        if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd->val, sd->scan_len)) {
+            //Decided to save a pointer to the mem_block copy since it won't be freed 
+            //until destructor is called or the val at the location isn't needed
+            block_loc = std::make_pair(
+                (unsigned long long)cur->region_start,
+                offset);
+            wait_res = WaitForSingleObject(mutex, INFINITE);
+            sd->results->push_back(block_loc);
+            ReleaseMutex(mutex);
+        }
+    }
+
+    return true;
+}
+#endif
 
 //This shoudn't really be called externally I can only think of it being
 //called when you need to check if memory is changed
