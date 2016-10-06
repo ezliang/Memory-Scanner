@@ -45,17 +45,18 @@ public:
     void EndScan();
 	void PrintMemInfo() const;
     void PrintScanResults() const;
-private:
-    void _ReScanMemory();
-    HANDLE proc;
-    MemoryBlockInfo* head;
-    MemoryBlockInfo* last;
-    unsigned int scan_len;
+
 #if _WIN64
     std::vector<std::pair<unsigned long long, unsigned long long>> scan_locs;
 #else
     std::vector<std::pair<unsigned long, unsigned long>> scan_locs;
 #endif
+private:
+    void _ReScanMemory();
+    HANDLE proc;
+    MemoryBlockInfo* head;
+    MemoryBlockInfo* last;
+    size_t scan_len;
 };
 
 void PrintMem(void* addr, size_t len, size_t block_len=4);
