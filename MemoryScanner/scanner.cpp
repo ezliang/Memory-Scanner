@@ -103,8 +103,8 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
 
     //to join the threads just sort the vector
     std::sort(scan_locs.begin(), scan_locs.end(), []
-        (const std::pair<unsigned int,unsigned int> lhs, 
-        const std::pair<unsigned int,unsigned int> rhs){
+        (const std::pair<unsigned long,unsigned long> lhs, 
+        const std::pair<unsigned long,unsigned long> rhs){
         return lhs.first < rhs.first;
     });
 
