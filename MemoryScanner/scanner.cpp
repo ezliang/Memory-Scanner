@@ -59,7 +59,7 @@ void* Scanner::AddNode(const MEMORY_BASIC_INFORMATION mbi) {
 HANDLE mutex;
 #if _WIN64
 void Scanner::InitScanMemory(unsigned long long start, unsigned long long stop,
-    void* val, unsigned int len) {
+    void* val, size_t len) {
     MEMORY_BASIC_INFORMATION mbi;
 
     scan_len = len;

@@ -36,7 +36,7 @@ public:
 	
 #if _WIN64
     void InitScanMemory(unsigned long long start, unsigned long long stop,
-        void* val, unsigned int len);
+                        void* val, size_t len);
 #else
     void InitScanMemory(unsigned long start, unsigned long stop,
         void* val, unsigned int len);

@@ -181,7 +181,7 @@ void GetNewValue(void*& val_loc, const size_t  val_len, DATA_TYPE data_type){
         WriteValueMemory(input, val_loc, data_type, val_len);
 }
 
-void* WriteValueMemory(char* input, void*& val_loc, DATA_TYPE data_type, int val_len, int radix){
+void* WriteValueMemory(char* input, void*& val_loc, DATA_TYPE data_type, size_t val_len, int radix){
 
     switch (data_type) {
     case _BYTE:
