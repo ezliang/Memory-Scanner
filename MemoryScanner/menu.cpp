@@ -68,7 +68,11 @@ void ScanMenu(HANDLE proc){
 
     c = AskContScan();
     int diff;
+#if _WIN64
     std::vector<std::pair<unsigned long long, unsigned long long>> last = s.scan_locs;
+#else
+    std::vector<std::pair<unsigned long, unsigned long>> last = s.scan_locs;
+#endif
 
     while (c != 3) {
         switch (c) {
