@@ -67,13 +67,19 @@ void ScanMenu(HANDLE proc){
     free(val);
 
     c = AskContScan();
-    while (c != 2) {
+    int diff;
+    while (c != 3) {
         switch (c) {
         case 1:
             GetNewValue(val, len, data_type);
+            diff = s.get_num_results();
             s.ScanMemoryCont(val);
             s.PrintScanResults();
+            printf("Reduced %d results\n", diff - s.get_num_results());
             free(val);
+            break;
+        case 2:
+
             break;
         default:
             break;
@@ -159,7 +165,8 @@ DATA_TYPE GetValueAndSize(void*& val_loc, size_t& val_len){
 int AskContScan(){
     int c;
     puts("1) Scan for value change");
-    puts("2) End scan");
+    puts("2) Undo last scan");
+    puts("3) End scan");
     scanf_s(" %d", &c);
     return c;
 }
