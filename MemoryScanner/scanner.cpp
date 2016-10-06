@@ -145,7 +145,10 @@ void Scanner::_ScanRegion(void* val) {
     sd.results = &scan_locs;
     sd.scan_len = scan_len;
 
-    HANDLE thndl;
+    const size_t num_threads = 2;
+
+    HANDLE thread_handles[num_threads];
+
 
     if (!(thndl = CreateThread(0, NULL, CompareRegion, &sd, 0, NULL)))
         ExitShowError();
@@ -165,7 +168,7 @@ DWORD WINAPI CompareRegion(void* param){
     unsigned long wait_res;
 
     while (cur) {
-        region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
+        region_end = MakePtr(unsigned char*,cur->mem_block, cur->region_size);
 
         for (DWORD offset = 0; offset < cur->region_size; offset++) {
 
