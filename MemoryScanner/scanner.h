@@ -8,6 +8,12 @@ struct MemoryBlockInfo{
     MemoryBlockInfo* next;
 };
 
+struct ScanData{
+    void* val;
+    MemoryBlockInfo* cur;
+    std::vector<std::pair<unsigned long, unsigned long>>* results;
+};
+
 //Scanner class knows nothing about data types only location and length
 class Scanner{
 
@@ -23,12 +29,6 @@ public:
 	void PrintMemInfo() const;
     void PrintScanResults() const;
 private:
-
-    struct ScanData{
-        void* val;
-        MemoryBlockInfo* cur;
-        std::vector<std::pair<unsigned long, unsigned long>>* results;
-    };
     
     void _ScanRegion(void* val);
     void _ReScanMemory();
