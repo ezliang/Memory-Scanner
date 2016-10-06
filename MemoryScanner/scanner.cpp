@@ -137,23 +137,28 @@ void Scanner::PrintMemInfo() const {
 HANDLE mutex;
 
 void Scanner::_ScanRegion(void* val) {
-    
+    MemoryBlockInfo* cur = head;
     mutex = CreateMutex(NULL, false, NULL);
     ScanData sd;
     sd.val = val;
-    sd.cur = head;
     sd.results = &scan_locs;
     sd.scan_len = scan_len;
 
     const size_t num_threads = 2;
 
     HANDLE thread_handles[num_threads];
-
-
-    if (!(thndl = CreateThread(0, NULL, CompareRegion, &sd, 0, NULL)))
-        ExitShowError();
     
-    WaitForSingleObject(thndl, INFINITE);
+    while (cur) {
+        for (size_t i = 0; i < num_threads; ++i){
+            sd.cur = cur;
+            if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd, 0, NULL)))
+                ExitShowError();
+            cur = cur->next;
+        }
+        WaitForMultipleObjects(num_threads, thread_handles, false, INFINITE);
+    }
+
+    //to join the threads just sort the vector
    
     CloseHandle(mutex);
 }
@@ -167,24 +172,24 @@ DWORD WINAPI CompareRegion(void* param){
 
     unsigned long wait_res;
 
-    while (cur) {
-        region_end = MakePtr(unsigned char*,cur->mem_block, cur->region_size);
+    
+    region_end = MakePtr(unsigned char*,cur->mem_block, cur->region_size);
 
-        for (DWORD offset = 0; offset < cur->region_size; offset++) {
+    for (DWORD offset = 0; offset < cur->region_size; offset++) {
 
-            if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd->val, sd->scan_len)) {
-                //Decided to save a pointer to the mem_block copy since it won't be freed 
-                //until destructor is called or the val at the location isn't needed
-                block_loc = std::make_pair(
-                    (unsigned long)cur->region_start,
-                    offset);
-                WaitForSingleObject(mutex, INFINITE);
-                sd->results->push_back(block_loc);
-                ReleaseMutex(mutex);
-            }
+        if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd->val, sd->scan_len)) {
+            //Decided to save a pointer to the mem_block copy since it won't be freed 
+            //until destructor is called or the val at the location isn't needed
+            block_loc = std::make_pair(
+                (unsigned long)cur->region_start,
+                offset);
+            WaitForSingleObject(mutex, INFINITE);
+            sd->results->push_back(block_loc);
+            ReleaseMutex(mutex);
         }
-        cur = cur->next;
     }
+    
+    
 
 }
 
