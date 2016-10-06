@@ -6,7 +6,7 @@
 
 
 
-#define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DOWRD_PTR)(addValue))
+#define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
 
 
 Scanner::~Scanner() {
