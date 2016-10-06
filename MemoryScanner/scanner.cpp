@@ -83,7 +83,7 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
     HANDLE thread_handles[num_threads];
 
     while (cur) {
-        for (size_t i = 0; i < num_threads; ++i){
+        for (size_t i = 0; i < num_threads && cur; ++i){
             sd[i].val = val;
             sd[i].results = &scan_locs;
             sd[i].scan_len = scan_len;
