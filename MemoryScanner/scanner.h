@@ -10,6 +10,7 @@ struct MemoryBlockInfo{
 
 struct ScanData{
     void* val;
+    unsigned int scan_len;
     MemoryBlockInfo* cur;
     std::vector<std::pair<unsigned long, unsigned long>>* results;
 };
@@ -41,3 +42,4 @@ private:
 };
 
 void PrintMem(void* addr, size_t len, size_t block_len=4);
+DWORD WINAPI CompareRegion(void* param);

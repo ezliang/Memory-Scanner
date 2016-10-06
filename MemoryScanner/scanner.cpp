@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "scanner.h"
+#include "error.h"
 #include <utility>
 
 #define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
@@ -144,31 +145,41 @@ void Scanner::_ScanRegion(void* val) {
     sd.results = &scan_locs;
     sd.scan_len = scan_len;
 
-    CreateThread(0, NULL, CompareRegion, &sd, 0, NULL);
-    //should create threads here 
+    HANDLE thndl;
+
+    if (!(thndl = CreateThread(0, NULL, CompareRegion, &sd, 0, NULL)))
+        ExitShowError();
+    
+    WaitForSingleObject(thndl, INFINITE);
    
     CloseHandle(mutex);
 }
 
 DWORD WINAPI CompareRegion(void* param){
-    ScanData sd = *(ScanData*)param;
-    MemoryBlockInfo* cur;
+    ScanData* sd = (ScanData*)param;
+    MemoryBlockInfo* cur = sd->cur;
     std::pair <unsigned long, unsigned long> block_loc;
     unsigned long offset = 0;
     unsigned char* region_end;
+
+    unsigned long wait_res;
+
+    wait_res = WaitForSingleObject(mutex, INFINITE);
+    //Change cur
+    ReleaseMutex(mutex);
 
     while (cur) {
         region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
 
         for (DWORD offset = 0; offset < cur->region_size; offset++) {
 
-            if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd.val, sd.scan_len)) {
+            if (!memcmp(MakePtr(void*, cur->mem_block, offset), sd->val, sd->scan_len)) {
                 //Decided to save a pointer to the mem_block copy since it won't be freed 
                 //until destructor is called or the val at the location isn't needed
                 block_loc = std::make_pair(
                     (unsigned long)cur->region_start,
                     offset);
-                sd.results->push_back(block_loc);
+                sd->results->push_back(block_loc);
             }
         }
         cur = cur->next;
