@@ -5,11 +5,9 @@
 #include <utility>
 
 
-#if _WIN64
-    #define MakePtr( cast, ptr, addValue ) (cast)( (unsigned long long*)(ptr) + (unsigned long long*)(addValue))
-#else
-    #define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DOWRD_PTR)(addValue))
-#endif
+
+#define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DOWRD_PTR)(addValue))
+
 
 Scanner::~Scanner() {
 
