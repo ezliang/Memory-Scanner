@@ -164,10 +164,6 @@ DWORD WINAPI CompareRegion(void* param){
 
     unsigned long wait_res;
 
-    wait_res = WaitForSingleObject(mutex, INFINITE);
-    //Change cur
-    ReleaseMutex(mutex);
-
     while (cur) {
         region_end = (unsigned char*)((DWORD_PTR)cur->mem_block + (DWORD_PTR)cur->region_size);
 
@@ -179,7 +175,9 @@ DWORD WINAPI CompareRegion(void* param){
                 block_loc = std::make_pair(
                     (unsigned long)cur->region_start,
                     offset);
+                WaitForSingleObject(mutex, INFINITE);
                 sd->results->push_back(block_loc);
+                ReleaseMutex(mutex);
             }
         }
         cur = cur->next;
