@@ -3,6 +3,7 @@
 #include "error.h"
 #include <algorithm>
 #include <utility>
+#include "config.h"
 
 #define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
 

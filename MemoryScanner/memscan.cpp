@@ -53,13 +53,6 @@ int main(int argc, char** argv){
         }
         c = GetScanType();
     }
-
-	//printf("Mod size 0x%x\n", mod_size);
-	//mod_end = addr + mod_size;
-
-	//printf("Loaded at %p\n", addr);
-
-	//unsigned long val = 0xdeadbeef;
 	
 	CloseHandle(proc);
 }
