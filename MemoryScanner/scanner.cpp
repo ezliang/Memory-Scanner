@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "scanner.h"
 #include "error.h"
+#include <algorithm>
 #include <utility>
 
 #define MakePtr( cast, ptr, addValue ) (cast)( (DWORD_PTR)(ptr) + (DWORD_PTR)(addValue))
@@ -89,12 +90,18 @@ void Scanner::InitScanMemory(unsigned long start, unsigned long stop,
             sd[i].cur = cur;
             if (!(thread_handles[i] = CreateThread(0, NULL, CompareRegion, &sd[i], 0, NULL)))
                 ExitShowError();
-            cur = cur->next;
+            if(cur)
+                cur = cur->next;
         }
         WaitForMultipleObjects(num_threads, thread_handles, false, INFINITE);
     }
 
     //to join the threads just sort the vector
+    std::sort(scan_locs.begin(), scan_locs.end(), []
+        (const std::pair<unsigned int,unsigned int> lhs, 
+        const std::pair<unsigned int,unsigned int> rhs){
+        return lhs.first > rhs.first;
+    });
 
     CloseHandle(mutex);
     //Should I truncate the linked list for blocks that don't make it in the search?

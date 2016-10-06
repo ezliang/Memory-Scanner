@@ -30,7 +30,6 @@ public:
 	void PrintMemInfo() const;
     void PrintScanResults() const;
 private:
-    
     void _ReScanMemory();
     HANDLE proc;
     MemoryBlockInfo* head;
