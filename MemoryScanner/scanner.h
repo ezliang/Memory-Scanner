@@ -42,4 +42,4 @@ private:
 };
 
 void PrintMem(void* addr, size_t len, size_t block_len=4);
-DWORD WINAPI CompareRegion(void* param);
+static DWORD WINAPI CompareRegion(void* param);

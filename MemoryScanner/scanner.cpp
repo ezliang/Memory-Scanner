@@ -163,7 +163,7 @@ void Scanner::_ScanRegion(void* val) {
     CloseHandle(mutex);
 }
 
-DWORD WINAPI CompareRegion(void* param){
+static DWORD WINAPI CompareRegion(void* param){
     ScanData* sd = (ScanData*)param;
     MemoryBlockInfo* cur = sd->cur;
     std::pair <unsigned long, unsigned long> block_loc;
